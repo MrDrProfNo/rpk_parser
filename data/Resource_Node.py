@@ -1,0 +1,45 @@
+from data.IRPKTreeNode import IRPKTreeNode
+from typing import List, BinaryIO
+from parser_utils.bytes_reader import *
+
+
+class ResourceNode (IRPKTreeNode):
+
+    def __init__(self):
+        self.type: bytes = None
+        self.id: int = None
+        self.name: bytes = None
+        self.fields = []
+        self.default_fields: List[bool] = []
+
+    def from_rpk(self, file: BinaryIO):
+        print("Magic 4-byte: " + read_bytes_display(file, 4))
+        print("Resource UID(Hex):", read_ascii(file, 19))
+        print("Resource\\Category:", read_ascii(file, 3))
+        name_size = read_int32(file)
+        resource_name = read_ascii(file, name_size)
+        resource_UID_2 = read_int32(file)
+        resource_UID_1 = read_int32(file)
+        print(f"Resource UID(decimal): {resource_UID_1}-{resource_UID_2}")
+        print(f"Resource Name:", resource_name)
+        after_name = read_int8(file)
+        print(f"byte after resource name: {after_name}")
+        num_defined_fields = read_int8(file)
+        field_offsets = []
+        for i in range(num_defined_fields):
+            field_num = read_int8(file)
+            field_offset = read_int8(file)
+            field_offsets.append((field_num, field_offset))
+
+
+        for num, offset in field_offsets:
+            field_val = read_float(file)
+            self.fields.append((num, field_val))
+
+        print("Fields:")
+        for num, value in self.fields:
+            print(f"{num}: {value}")
+
+        return
+
+
