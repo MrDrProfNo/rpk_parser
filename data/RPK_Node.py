@@ -2,6 +2,7 @@ from data.IRPKTreeNode import IRPKTreeNode
 import struct
 from parser_utils.bytes_reader import *
 from data.Resource_Node import ResourceNode
+import json
 
 """
 Top of the node hierarchy representing a single RPK file. Handles 
@@ -143,7 +144,18 @@ class RPK_Node(IRPKTreeNode):
             self.resources.append(resource)
 
     def to_json(self):
-        return
+        return json.dumps(self.to_dict())
+
+    def to_dict(self):
+        return {
+            "source_file": self.source_file,
+            "config": self.config,
+            "resources": [resource.to_dict() for resource in self.resources],
+            "categories": self.categories,
+            "labels": self.labels,
+            "file_size": self.__file_size,
+            "file_name": self.__file_name
+        }
 
 
 class RPKFormatException (IOError):
