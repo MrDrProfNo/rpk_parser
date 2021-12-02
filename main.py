@@ -1,5 +1,5 @@
 from data.RPK_Node import *
-from sys import argv, stdout
+from sys import argv, stdout, stderr
 import os
 import argparse
 import json
@@ -19,18 +19,24 @@ def main():
         filepath = parsed_args.filepath
         node = RPK_Node(filepath)
         if parsed_args.json:
-            if node is None:
-                raise
-            print(node.__dict__)
+            print(node.to_json(), file=stderr)
     else:
         while (filepath := input("Enter full filepath:\n")) != "exit":
             node = RPK_Node(filepath)
             print("-"*40)
             if parsed_args.json:
-                if node is None:
-                    raise
-                print(node.__dict__)
+                print(node.to_json(), file=stderr)
 
+
+def node_json_from_filepath(filepath):
+    """
+    Temporary function to open up the dict as a return so that you can hook in by importing.
+
+    If you want to run the project from another file, import this function and give it a filepath
+    :param filepath:
+    :return:
+    """
+    return RPK_Node(filepath).to_dict()
 
 
 if __name__ == "__main__":

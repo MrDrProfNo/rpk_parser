@@ -1,7 +1,7 @@
 from data.IRPKTreeNode import IRPKTreeNode
 from typing import List, BinaryIO
 from parser_utils.bytes_reader import *
-
+import json
 
 class ResourceNode (IRPKTreeNode):
 
@@ -48,4 +48,15 @@ class ResourceNode (IRPKTreeNode):
 
         return
 
+    def to_json(self):
+        return json.dumps(self.to_dict())
+
+    def to_dict(self):
+        return {
+            "type": self.type,
+            "id": self.id,
+            "name": self.name,
+            "fields": self.fields,
+            "default_fields": self.default_fields
+        }
 
