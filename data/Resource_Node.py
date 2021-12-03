@@ -3,6 +3,9 @@ from typing import List, BinaryIO
 from parser_utils.bytes_reader import *
 import json
 
+# constant for use in file.seek() operations
+SEEK_CUR = 1
+
 class ResourceNode (IRPKTreeNode):
 
     def __init__(self):
@@ -13,6 +16,12 @@ class ResourceNode (IRPKTreeNode):
         self.default_fields: List[bool] = []
 
     def from_rpk(self, file: BinaryIO):
+        # seeking backwards to find the resource type
+        file.seek(-22, SEEK_CUR)
+        self.type = read_bytes_display(file, 4)
+        file.seek(18, SEEK_CUR)
+        print("Resource type:", self.type)
+
         print("Magic 4-byte: " + read_bytes_display(file, 4))
         print("Resource UID(Hex):", read_ascii(file, 19))
         print("Resource\\Category:", read_ascii(file, 3))
