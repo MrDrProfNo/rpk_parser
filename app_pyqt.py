@@ -1,8 +1,6 @@
 import sys
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import rpk_searchutils.scan_mem_ref as scan
 import traceback
 
 
